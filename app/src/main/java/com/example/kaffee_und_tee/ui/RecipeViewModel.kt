@@ -27,7 +27,7 @@ class RecipeViewModel : ViewModel() {
         loadRecipes()
     }
     
-    private fun loadRecipes() {
+    fun loadRecipes() {
         viewModelScope.launch {
             try {
                 _isLoading.value = true
@@ -49,12 +49,13 @@ class RecipeViewModel : ViewModel() {
             try {
                 _isLoading.value = true
                 _error.value = null
+                // Always fetch fresh details for the recipe
                 val detailedRecipe = recipeService.fetchRecipeDetails(recipe)
                 _selectedRecipe.value = detailedRecipe
             } catch (e: Exception) {
                 e.printStackTrace()
                 _error.value = "Failed to load recipe details. Please try again later."
-                _selectedRecipe.value = recipe // Fallback to basic recipe info
+                _selectedRecipe.value = null // Don't fall back to basic recipe info
             } finally {
                 _isLoading.value = false
             }
@@ -67,5 +68,9 @@ class RecipeViewModel : ViewModel() {
     
     fun retry() {
         loadRecipes()
+    }
+    
+    fun findRecipeByTitle(title: String): Recipe? {
+        return _recipes.value?.find { it.title == title }
     }
 } 

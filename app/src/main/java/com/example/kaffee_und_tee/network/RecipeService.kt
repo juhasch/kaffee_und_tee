@@ -86,10 +86,18 @@ class RecipeService {
         return withContext(Dispatchers.IO) {
             try {
                 Log.d(TAG, "Fetching details for recipe: ${recipe.title}")
+                Log.d(TAG, "URL: ${recipe.webpageUrl}")
+                
                 val doc = Jsoup.connect(recipe.webpageUrl)
                     .timeout(10000)
                     .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36")
                     .get()
+                
+                // Log all div classes for debugging
+                doc.select("div").forEach { div ->
+                    Log.d(TAG, "Found div with classes: ${div.classNames().joinToString(", ")}")
+                }
+                
                 val ingredients = parseIngredients(doc)
                 val videoUrl = parseVideoUrl(doc)
                 
@@ -117,7 +125,9 @@ class RecipeService {
             "div.ingredients ul li",
             "div[class*='ingredients'] ul li",
             "div[class*='recipe'] ul li",
-            "ul.ingredients li"
+            "ul.ingredients li",
+            "div[class*='zutaten'] ul li",  // German word for ingredients
+            "div[class*='Zutaten'] ul li"   // German word for ingredients (capitalized)
         )
         
         for (selector in selectors) {
@@ -127,44 +137,47 @@ class RecipeService {
             if (elements.isNotEmpty()) {
                 elements.forEach { element ->
                     try {
-                        ingredients.add(element.text())
+                        val ingredient = element.text().trim()
+                        if (ingredient.isNotEmpty()) {
+                            ingredients.add(ingredient)
+                            Log.d(TAG, "Added ingredient: $ingredient")
+                        }
                     } catch (e: Exception) {
                         Log.e(TAG, "Error parsing ingredient element", e)
-                        // Skip this ingredient if there's an error parsing it
                     }
                 }
                 break // Stop trying other selectors if we found ingredients
             }
         }
         
+        if (ingredients.isEmpty()) {
+            Log.w(TAG, "No ingredients found with any selector")
+        }
+        
         return ingredients
     }
     
     private fun parseVideoUrl(doc: Document): String? {
-        // Try different selectors for video
+        // Try different selectors for video URL
         val selectors = listOf(
-            "div.video-player source",
             "video source",
-            "div[class*='video'] source",
-            "div[class*='player'] source",
-            "video",
-            "iframe[src*='video']"
+            "video[src]",
+            "iframe[src*='video']",
+            "div[class*='video'] iframe"
         )
         
         for (selector in selectors) {
-            try {
-                val videoElement = doc.select(selector).first()
-                val videoUrl = videoElement?.attr("src")
-                    ?: videoElement?.attr("data-src")
-                Log.d(TAG, "Trying video selector '$selector': found URL: $videoUrl")
-                if (videoUrl != null) {
-                    return videoUrl
+            val element = doc.select(selector).firstOrNull()
+            if (element != null) {
+                val url = element.attr("src")
+                if (url.isNotEmpty()) {
+                    Log.d(TAG, "Found video URL: $url")
+                    return url
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Error parsing video URL with selector '$selector'", e)
             }
         }
         
+        Log.w(TAG, "No video URL found")
         return null
     }
 } 
