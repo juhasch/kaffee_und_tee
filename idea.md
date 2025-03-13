@@ -14,7 +14,7 @@ This app must be extremely simple and easy to use. It is for elderly people.
 Overall, there are only three pages:
 1. The starting page with an overview of recipes
 2. The recipe page with an image of the recipe and the ingredients
-3. A video page showing the video of the recipe
+3. A link to the PDF version of the recipe
 
 On the bottom of the screen there are two buttons:
 1. A "home" button, that brings you back to the starting page

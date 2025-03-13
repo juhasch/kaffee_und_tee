@@ -111,6 +111,20 @@ class RecipeDetailFragment : Fragment() {
         binding.bottomNavigation.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        binding.imgRecipe.setOnClickListener {
+            viewModel.selectedRecipe.value?.let { recipe ->
+                // Try to open PDF URL first, if available
+                recipe.pdfUrl?.let { pdfUrl ->
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(pdfUrl))
+                    startActivity(intent)
+                } ?: run {
+                    // If no PDF URL, open the webpage URL
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(recipe.webpageUrl))
+                    startActivity(intent)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {

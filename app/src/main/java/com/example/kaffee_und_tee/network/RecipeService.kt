@@ -69,7 +69,8 @@ class RecipeService {
                     imageUrl = absoluteImageUrl,
                     ingredients = emptyList(),
                     videoUrl = null,
-                    webpageUrl = absoluteLink
+                    webpageUrl = absoluteLink,
+                    pdfUrl = null
                 )
                 Log.d(TAG, "Parsing recipe: title='$title', imageUrl='$absoluteImageUrl', webpageUrl='$absoluteLink'")
                 recipes.add(recipe)
@@ -100,12 +101,14 @@ class RecipeService {
                 
                 val ingredients = parseIngredients(doc)
                 val videoUrl = parseVideoUrl(doc)
+                val pdfUrl = parsePdfUrl(doc)
                 
-                Log.d(TAG, "Found ${ingredients.size} ingredients and video URL: $videoUrl")
+                Log.d(TAG, "Found ${ingredients.size} ingredients, video URL: $videoUrl, PDF URL: $pdfUrl")
                 
                 recipe.copy(
                     ingredients = ingredients,
-                    videoUrl = videoUrl
+                    videoUrl = videoUrl,
+                    pdfUrl = pdfUrl
                 )
             } catch (e: IOException) {
                 Log.e(TAG, "Network error while fetching recipe details", e)
@@ -178,6 +181,35 @@ class RecipeService {
         }
         
         Log.w(TAG, "No video URL found")
+        return null
+    }
+    
+    private fun parsePdfUrl(doc: Document): String? {
+        // Look for links containing "Ausdrucken" or "PDF"
+        val selectors = listOf(
+            "a:contains(Ausdrucken)",
+            "a:contains(PDF)",
+            "a[href$=.pdf]"
+        )
+        
+        for (selector in selectors) {
+            val element = doc.select(selector).firstOrNull()
+            if (element != null) {
+                val url = element.attr("href")
+                if (url.isNotEmpty()) {
+                    // Make URL absolute if it's relative
+                    val absoluteUrl = if (url.startsWith("/")) {
+                        "https://www.swr.de$url"
+                    } else {
+                        url
+                    }
+                    Log.d(TAG, "Found PDF URL: $absoluteUrl")
+                    return absoluteUrl
+                }
+            }
+        }
+        
+        Log.w(TAG, "No PDF URL found")
         return null
     }
 } 
