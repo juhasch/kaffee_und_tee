@@ -24,8 +24,8 @@
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textSize="16sp"
+            android:padding="8dp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:maxLines="2"
             android:ellipsize="end" />
