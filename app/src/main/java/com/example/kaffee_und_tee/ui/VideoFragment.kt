@@ -45,14 +45,11 @@ class VideoFragment : Fragment() {
         context?.let { context ->
             Log.d(TAG, "Setting up video player with URL: ${args.videoUrl}")
 
-            // Configure track selector with forced video
+            // Configure track selector
             val trackSelector = DefaultTrackSelector(context).apply {
                 setParameters(
                     buildUponParameters()
                         .setMaxVideoSizeSd()
-                        .setPreferredVideoMimeType(C.MIMETYPE_VIDEO_H264)
-                        .setRendererDisabled(C.TRACK_TYPE_AUDIO, false)
-                        .setRendererDisabled(C.TRACK_TYPE_VIDEO, false)
                 )
             }
 
@@ -69,7 +66,7 @@ class VideoFragment : Fragment() {
                     // Configure the player view with simpler settings
                     binding.playerView.apply {
                         player = exoPlayer
-                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+                        resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
                         useController = true
                         keepScreenOn = true
                     }

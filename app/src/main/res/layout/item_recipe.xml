@@ -15,7 +15,7 @@
         <ImageView
             android:id="@+id/imgRecipe"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="200dp"
             android:contentDescription="Recipe image"
             android:scaleType="centerCrop" />
 
@@ -23,8 +23,8 @@
             android:id="@+id/txtTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:textSize="24sp"
+            android:padding="4dp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
     </LinearLayout>
