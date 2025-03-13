@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kaffee_und_tee.R
 import com.example.kaffee_und_tee.databinding.FragmentRecipeListBinding
 import com.example.kaffee_und_tee.ui.RecipeViewModel
+import kotlin.math.max
 
 class RecipeListFragment : Fragment() {
     private var _binding: FragmentRecipeListBinding? = null
@@ -45,9 +46,15 @@ class RecipeListFragment : Fragment() {
                 RecipeListFragmentDirections.actionRecipeListToRecipeDetail(recipe.title)
             )
         }
+        
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(context, 2)
+            layoutManager = GridLayoutManager(requireContext(), 2) // Fixed to 2 columns
             adapter = this@RecipeListFragment.adapter
+            setHasFixedSize(true)
+            // Remove any item decoration that might add spacing
+            if (itemDecorationCount > 0) {
+                removeItemDecorationAt(0)
+            }
         }
     }
 
