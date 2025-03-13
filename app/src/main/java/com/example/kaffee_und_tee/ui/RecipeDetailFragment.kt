@@ -111,14 +111,6 @@ class RecipeDetailFragment : Fragment() {
         binding.bottomNavigation.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
-
-        binding.imgRecipe.setOnClickListener {
-            viewModel.selectedRecipe.value?.let { recipe ->
-                findNavController().navigate(
-                    RecipeDetailFragmentDirections.actionRecipeDetailToVideo(recipe.videoUrl ?: "")
-                )
-            }
-        }
     }
 
     override fun onDestroyView() {

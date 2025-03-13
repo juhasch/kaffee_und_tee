@@ -21,24 +21,7 @@
             android:name="recipeTitle"
             app:argType="string" />
         <action
-            android:id="@+id/action_recipeDetail_to_video"
-            app:destination="@id/videoFragment" />
-        <action
             android:id="@+id/action_recipeDetail_to_recipeList"
-            app:destination="@id/recipeListFragment"
-            app:popUpTo="@id/recipeListFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/videoFragment"
-        android:name="com.example.kaffee_und_tee.ui.VideoFragment"
-        android:label="Video">
-        <argument
-            android:name="videoUrl"
-            app:argType="string" />
-        <action
-            android:id="@+id/action_video_to_recipeList"
             app:destination="@id/recipeListFragment"
             app:popUpTo="@id/recipeListFragment"
             app:popUpToInclusive="true" />
