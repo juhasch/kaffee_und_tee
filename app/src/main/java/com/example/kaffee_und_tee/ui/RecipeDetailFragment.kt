@@ -3,9 +3,11 @@ package com.example.kaffee_und_tee.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -108,20 +110,28 @@ class RecipeDetailFragment : Fragment() {
             )
         }
 
-        binding.bottomNavigation.btnBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
-
         binding.imgRecipe.setOnClickListener {
             viewModel.selectedRecipe.value?.let { recipe ->
-                // Try to open PDF URL first, if available
-                recipe.pdfUrl?.let { pdfUrl ->
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(pdfUrl))
-                    startActivity(intent)
-                } ?: run {
-                    // If no PDF URL, open the webpage URL
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(recipe.webpageUrl))
-                    startActivity(intent)
+                Log.d("RecipeDetail", "Recipe clicked: ${recipe.title}")
+                Log.d("RecipeDetail", "PDF URL: ${recipe.pdfUrl}")
+                
+                try {
+                    recipe.pdfUrl?.let { pdfUrl ->
+                        Log.d("RecipeDetail", "Opening PDF with system viewer: $pdfUrl")
+                        val intent = Intent(Intent.ACTION_VIEW).apply {
+                            setDataAndType(Uri.parse(pdfUrl), "application/pdf")
+                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        }
+                        startActivity(intent)
+                    } ?: run {
+                        Log.d("RecipeDetail", "No PDF URL available, opening webpage: ${recipe.webpageUrl}")
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(recipe.webpageUrl))
+                        startActivity(intent)
+                    }
+                } catch (e: Exception) {
+                    Log.e("RecipeDetail", "Error opening URL", e)
+                    Toast.makeText(context, "Fehler beim Öffnen: ${e.message}", Toast.LENGTH_LONG).show()
                 }
             }
         }

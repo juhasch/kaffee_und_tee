@@ -84,10 +84,6 @@ class RecipeListFragment : Fragment() {
             // Already on home screen
         }
 
-        binding.bottomNavigation.btnBack.setOnClickListener {
-            // Already on home screen
-        }
-
         binding.errorContainer.findViewById<Button>(R.id.btnRetry).setOnClickListener {
             viewModel.retry()
         }

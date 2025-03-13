@@ -10,24 +10,9 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnHome"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:layout_weight="1"
-        android:layout_marginEnd="8dp"
         android:text="Startseite"
-        android:textSize="24sp"
-        android:insetTop="0dp"
-        android:insetBottom="0dp"
-        app:cornerRadius="8dp"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnBack"
-        android:layout_width="0dp"
-        android:layout_height="72dp"
-        android:layout_weight="1"
-        android:layout_marginStart="8dp"
-        android:text="Zurück"
         android:textSize="24sp"
         android:insetTop="0dp"
         android:insetBottom="0dp"
