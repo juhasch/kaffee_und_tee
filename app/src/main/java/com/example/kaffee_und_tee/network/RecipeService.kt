@@ -41,42 +41,40 @@ class RecipeService {
         Log.d(TAG, "Found ${recipeElements.size} recipe elements")
 
         recipeElements.forEach { element ->
-            // Get title from h2 or h3 element, or from the link text if those aren't available
-            val title = element.select("h2, h3").firstOrNull()?.text()
-                ?: element.select("a").firstOrNull()?.text()
-                ?: ""
-            
-            // Clean up title by removing "Rezepte " prefix if present
-            val cleanTitle = title.replace("Rezepte ", "").trim()
+            // Try to get title from h2 first, then from link text if h2 is empty
+            var title = element.select("h2").text()
+            if (title.isBlank()) {
+                title = element.select("a").first()?.text() ?: ""
+            }
+            title = title.replace("Rezepte ", "").trim()
 
-            // Get image URL and ensure it's absolute
             val imageUrl = element.select("img").firstOrNull()?.attr("src") ?: ""
+            val link = element.select("a").firstOrNull()?.attr("href") ?: ""
+
+            // Make URLs absolute
             val absoluteImageUrl = if (imageUrl.startsWith("/")) {
                 "https://www.swr.de$imageUrl"
             } else {
                 imageUrl
             }
-
-            // Get link and ensure it's absolute
-            val link = element.select("a").firstOrNull()?.attr("href") ?: ""
             val absoluteLink = if (link.startsWith("/")) {
                 "https://www.swr.de$link"
             } else {
                 link
             }
 
-            if (cleanTitle.isNotEmpty() && absoluteImageUrl.isNotEmpty() && absoluteLink.isNotEmpty()) {
+            if (title.isNotEmpty() && absoluteImageUrl.isNotEmpty() && absoluteLink.isNotEmpty()) {
                 val recipe = Recipe(
-                    title = cleanTitle,
+                    title = title,
                     imageUrl = absoluteImageUrl,
                     ingredients = emptyList(),
                     videoUrl = null,
                     webpageUrl = absoluteLink
                 )
-                Log.d(TAG, "Parsing recipe: title='$cleanTitle', imageUrl='$absoluteImageUrl', webpageUrl='$absoluteLink'")
+                Log.d(TAG, "Parsing recipe: title='$title', imageUrl='$absoluteImageUrl', webpageUrl='$absoluteLink'")
                 recipes.add(recipe)
             } else {
-                Log.w(TAG, "Skipping recipe due to missing data: title='$cleanTitle', imageUrl='$absoluteImageUrl', link='$absoluteLink'")
+                Log.w(TAG, "Skipping recipe due to missing data: title='$title', imageUrl='$absoluteImageUrl', link='$absoluteLink'")
             }
         }
 
