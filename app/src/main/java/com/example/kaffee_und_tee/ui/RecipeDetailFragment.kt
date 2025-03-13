@@ -53,7 +53,7 @@ class RecipeDetailFragment : Fragment() {
             if (recipe != null) {
                 binding.txtTitle.text = recipe.title
                 binding.txtIngredients.text = if (recipe.ingredients.isNotEmpty()) {
-                    recipe.ingredients.joinToString("\n")
+                    recipe.ingredients.joinToString("\n") { "• $it" }
                 } else {
                     "Keine Zutaten gefunden"
                 }
