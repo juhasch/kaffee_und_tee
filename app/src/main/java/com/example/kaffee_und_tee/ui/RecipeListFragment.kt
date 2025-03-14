@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.kaffee_und_tee.R
 import com.example.kaffee_und_tee.databinding.FragmentRecipeListBinding
@@ -48,7 +47,7 @@ class RecipeListFragment : Fragment() {
         }
         
         binding.recyclerView.apply {
-            layoutManager = GridLayoutManager(requireContext(), 2) // Fixed to 2 columns
+            layoutManager = LinearLayoutManager(requireContext())
             adapter = this@RecipeListFragment.adapter
             setHasFixedSize(true)
             // Remove any item decoration that might add spacing
