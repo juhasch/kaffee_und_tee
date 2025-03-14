@@ -10,7 +10,7 @@ Die App ist ein einfaches Android-Projekt, das mit [Android Studio](https://deve
 
 ## Datenquellen
 
-Die Daten werden aus der [SWR-API](https://api.swr.de/v1/docs/index.html) bezogen.
+Die Daten werden direkt vom SWR bezogen.
 
 
 
