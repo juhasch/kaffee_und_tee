@@ -9,7 +9,7 @@ import org.jsoup.nodes.Document
 import java.io.IOException
 
 class RecipeService {
-    private val baseUrl = "https://www.swr.de/video/sendungen-a-z/kaffee-oder-tee/rezepte/rezeptearchiv-100.html"
+    private val baseUrl = "https://www.swr.de/leben/rezepte/kaffee-oder-tee-rezepte-archiv-100.html"
     private val TAG = "RecipeService"
     
     suspend fun fetchRecipes(): List<Recipe> {
